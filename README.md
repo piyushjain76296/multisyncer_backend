@@ -1,90 +1,126 @@
-# Multi-Window Media Sequencer
+<div align="center">
+  <h1>🎬 Multi-Window Media Sequencer</h1>
+  <p><strong>A production-grade, highly deterministic real-time media synchronization engine.</strong></p>
 
-A production-quality full-stack application that continuously plays independent media sequences across multiple windows with deterministic, server-authoritative synchronization.
+  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](#)
+  [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](#)
+  [![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)](#)
+  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](#)
 
-## Architecture
+</div>
 
-This application consists of:
-*   **Frontend**: React, TypeScript, Vite. (Stateless deterministic playback engine).
-*   **Backend**: Go, `go-chi`, `gorilla/websocket`. (Source of truth for configuration and time).
-*   **Database**: PostgreSQL. (Persistent configuration storage).
+---
 
-The frontend and backend communicate via **REST** for configuration mutations, and **WebSockets** for real-time state broadcasts and time synchronization.
+## 📖 Overview
 
-## The 5-Hour Cycle & Deterministic Playback
+The **Multi-Window Media Sequencer** is a powerful full-stack application designed to orchestrate independent media sequences across multiple browser windows simultaneously. It features a custom **stateless deterministic playback engine** that ensures all screens remain in perfect lockstep using a highly efficient server-authoritative time synchronization protocol over WebSockets.
 
-This system utilizes a highly deterministic, stateless playback engine on the frontend rather than relying on the server to push "next media" events every few seconds.
+Whether displaying digital signage, multi-screen art installations, or synchronized presentations, this system ensures frame-perfect alignment without relying on clunky state machines or constant server polling.
 
-1.  **Logical Epoch**: A 5-hour cycle (18,000 seconds) is established.
-2.  **Calculation**: At any given frame, the client retrieves the current synchronized server time. It calculates `timeInCycle = serverTime % 18000`.
-3.  **Playlist Wrap**: By dividing `timeInCycle` by the total duration of a window's playlist, we find exactly which media item should be active at this exact millisecond.
-4.  **Result**: When the 5-hour cycle boundary is reached, the math naturally wraps back to 0, causing the playlist to perfectly restart from its configured starting point.
+---
 
-## Synchronization Architecture
+## ✨ Key Features
 
-When a Sync is scheduled (e.g., `SYNC M2` for 30 seconds):
-1.  The backend writes a `SyncSession` to the database with a future `startAt` and `endAt` timestamp, acting as the absolute source of truth.
-2.  This session is broadcasted to all connected clients over WebSockets.
-3.  Every client continually calculates its current frame against the Server Time Offset.
-4.  Once `serverTime >= startAt`, every client simultaneously overrides its normal playlist and begins playing the Sync Media.
-5.  Once `serverTime >= endAt`, the Sync logic inherently yields. The frontend playback engine immediately falls back to calculating its position in the normal 5-hour cycle. 
-6.  **Crucially, normal playlists are never destroyed or paused.** The sync merely overlays the normal timeline. The windows "resume" their playlists at the exact logical position they *would have been in* had the sync never occurred.
+- **⏱️ Deterministic Synchronization:** Employs a 5-hour logical epoch to mathematically calculate the exact frame every window should be displaying based purely on synchronized server time. 
+- **🌐 Real-Time WebSockets:** Instantly broadcasts state changes (new media, updated playlists, scheduled syncs) to all connected clients.
+- **🎛️ Full Control Panel:** A comprehensive, sleek React frontend to manage media libraries, spin up virtual windows, and dynamically edit drag-and-drop style playlists on the fly.
+- **⚡ "Global Sync" Override:** Instantly hijack all screens to play a specific media asset simultaneously, gracefully returning them to their exact logical positions in their individual playlists when finished.
+- **🖼️ Rich Media Support:** Natively handles Video URLs, static Images, and Blank placeholders.
 
-## Setup & Running Locally
+---
+
+## 🏗️ Architecture
+
+The platform follows a modern separated architecture:
+
+### Frontend (`/frontend`)
+*   **Tech Stack:** React, TypeScript, Vite, CSS Modules.
+*   **Design Pattern:** Completely stateless client. It never "guesses" what comes next; it simply calculates its state (`currentMedia`, `mediaStartTimeMs`) based on the globally synchronized clock and its assigned playlist. 
+
+### Backend (`/backend`)
+*   **Tech Stack:** Go 1.21+, `go-chi` (Routing), `gorilla/websocket` (Real-time).
+*   **Design Pattern:** Acts as the absolute source of truth. Handles CRUD operations for the PostgreSQL database and maintains the central time clock for the entire fleet of screens.
+
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to run the project locally.
 
 ### Prerequisites
-*   Docker & Docker Compose (for PostgreSQL)
-*   Go 1.21+
-*   Node.js 18+
+*   [Docker](https://www.docker.com/) & Docker Compose
+*   [Go 1.21+](https://go.dev/)
+*   [Node.js 18+](https://nodejs.org/)
 
-### 1. Database
+### 1. Database (PostgreSQL)
+Start the local database using Docker:
 ```bash
 docker-compose up -d
 ```
-This spins up PostgreSQL on `localhost:5432`.
+*(This exposes PostgreSQL on `localhost:5432`)*
 
-### 2. Backend
+### 2. Backend Server
+Navigate to the backend directory, install dependencies, and start the Go server:
 ```bash
 cd backend
 cp .env.example .env
 go mod tidy
 go run ./cmd/server/main.go
 ```
-The backend automatically runs migrations and seeds the database with 4 Windows and Demo Media on startup. It listens on `:8080`.
+*(The server automatically runs database migrations, seeds demo data, and listens on port `8080`)*
 
-### 3. Frontend
+### 3. Frontend Dashboard
+In a new terminal, start the Vite development server:
 ```bash
 cd frontend
 cp .env.example .env
 npm install
 npm run dev
 ```
-The frontend will start on `http://localhost:5173`.
+Navigate to **[http://localhost:5173](http://localhost:5173)** in your browser to access the Control Panel.
 
-## API Documentation
+---
 
-*   `GET /api/windows`: List all windows.
-*   `POST /api/windows`: Create a window.
-*   `GET /api/windows/:id/playlist`: Retrieve a window's playlist.
-*   `POST /api/windows/:id/playlist`: Update a window's playlist (Provide array of items).
-*   `GET /api/media`: List all media items.
-*   `POST /api/media`: Create a media item.
-*   `POST /api/sync`: Schedule a global sync (`media_id`, `duration_seconds`).
-*   `GET /api/sync/active`: Get currently active or scheduled sync.
+## 🧠 How the Engine Works
 
-## WebSocket Protocol
+Instead of the server frantically pushing "play next" events to clients every few seconds (which leads to drift and lag), we use **Math**.
 
+1.  **Logical Epoch**: A continuous 5-hour cycle (18,000 seconds) is established globally.
+2.  **Calculation**: At any given animation frame, the client calculates `timeInCycle = serverTime % 18000`.
+3.  **Playlist Wrap**: By dividing `timeInCycle` by the total duration of a window's playlist, the engine mathematically determines exactly which media item should be active at this exact millisecond, and exactly what its video `currentTime` should be.
+4.  **Resilience**: If a client disconnects, buffers, or refreshes, it doesn't matter. The moment it reconnects, the math drops it perfectly back into sync with the rest of the fleet.
+
+---
+
+## 🔌 API Reference
+
+### REST Endpoints
+*   `GET /api/windows` - List all screens.
+*   `POST /api/windows` - Provision a new screen.
+*   `GET /api/windows/:id/playlist` - Retrieve a screen's playlist.
+*   `POST /api/windows/:id/playlist` - Update a screen's playlist.
+*   `GET /api/media` - List global media library.
+*   `POST /api/media` - Add new media to library.
+*   `POST /api/sync` - Schedule a global sync event.
+*   `GET /api/sync/active` - Get the currently active/scheduled sync.
+
+### WebSocket Protocol
 *   **Endpoint**: `ws://<host>/ws`
-*   **Message Format**: `{ "type": string, "timestamp": string, "payload": any }`
-*   **Events Received**: `TIME_SYNC`, `WINDOW_CREATED`, `MEDIA_CREATED`, `PLAYLIST_UPDATED`, `SYNC_SCHEDULED`.
+*   **Events**: `TIME_SYNC`, `WINDOW_CREATED`, `MEDIA_CREATED`, `PLAYLIST_UPDATED`, `SYNC_SCHEDULED`.
 
-## Assumptions & Tradeoffs
+---
 
-1.  **Authoritative Duration**: For the 5-hour cycle timeline to be globally deterministic and mathematically sound, the **configured duration** in the playlist is treated as authoritative, rather than the natural video duration. This guarantees that all windows stay in perfect mathematical lockstep regardless of video buffering or metadata loading times.
-2.  **Stateless Engine**: Because the frontend calculates state purely from `ServerTime` + `Playlist`, we avoid complex distributed state machines. If a client disconnects and reconnects, it simply resumes rendering whatever the math dictates for the current server time.
+## 📦 Deployment Strategy
 
-## Deployment Strategy
+This application is production-ready and can be deployed easily:
 
-*   **Database**: Deploy to a managed PostgreSQL provider (e.g., Supabase, Neon, Render).
-*   **Backend**: Deploy as a web service via Dockerfile on Render or Railway. Set `DATABASE_URL` and `CORS_ORIGIN`.
-*   **Frontend**: Build the static React bundle (`npm run build`) and deploy to Vercel or Netlify. Set `VITE_API_URL` and `VITE_WS_URL`.
+*   **Database**: Deploy to a managed PostgreSQL provider (e.g., [Supabase](https://supabase.com/), [Neon](https://neon.tech/)).
+*   **Backend**: Package via Dockerfile and deploy to [Render](https://render.com/) or [Railway](https://railway.app/). Ensure `DATABASE_URL` and `CORS_ORIGIN` environment variables are set.
+*   **Frontend**: Build the static React bundle (`npm run build`) and deploy to [Vercel](https://vercel.com/) or [Netlify](https://www.netlify.com/). Set `VITE_API_URL` and `VITE_WS_URL`.
+
+---
+
+<div align="center">
+  <i>Built with ❤️ for perfectly synchronized pixels.</i>
+</div>
