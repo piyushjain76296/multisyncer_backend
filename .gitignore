@@ -1,0 +1,19 @@
+# Environment files - never commit secrets
+backend/.env
+frontend/.env
+.env
+
+# Go build artifacts
+*.exe
+*.dll
+*.so
+backend/server.exe
+backend/main.exe
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,19 @@
+# Ignore local environment files - never ship secrets in image
+.env
+.env.*
+!.env.example
+
+# Ignore Windows build artifacts
+*.exe
+*.dll
+*.obj
+
+# Ignore git directory
+.git
+.gitignore
+
+# Ignore test files
+*_test.go
+
+# Ignore local dist/build output
+dist/
