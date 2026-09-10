@@ -1,6 +1,8 @@
 module github.com/user/backend_multisyncer
 
-go 1.25.0
+go 1.23.0
+
+toolchain go1.23.12
 
 require (
 	github.com/go-chi/chi/v5 v5.3.2

@@ -8,13 +8,14 @@ RUN apk add --no-cache git
 
 # Copy go module files and download dependencies
 COPY go.mod go.sum ./
+ENV GOTOOLCHAIN=local
 RUN go mod download
 
 # Copy source code
 COPY . .
 
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOTOOLCHAIN=local go build -a -installsuffix cgo -o server ./cmd/server/main.go
 
 # Final stage - minimal image
 FROM alpine:3.19
