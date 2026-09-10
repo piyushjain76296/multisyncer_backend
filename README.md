@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🎬 Multi-Window Media Sequencer</h1>
+  <h1> Multi-Window Media Sequencer</h1>
   <p><strong>A production-grade, highly deterministic real-time media synchronization engine.</strong></p>
 
   [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
@@ -12,7 +12,7 @@
 
 ---
 
-## 📖 Overview
+##  Overview
 
 The **Multi-Window Media Sequencer** is a powerful full-stack application designed to orchestrate independent media sequences across multiple browser windows simultaneously. It features a custom **stateless deterministic playback engine** that ensures all screens remain in perfect lockstep using a highly efficient server-authoritative time synchronization protocol over WebSockets.
 
@@ -20,17 +20,17 @@ Whether displaying digital signage, multi-screen art installations, or synchroni
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-- **⏱️ Deterministic Synchronization:** Employs a 5-hour logical epoch to mathematically calculate the exact frame every window should be displaying based purely on synchronized server time. 
-- **🌐 Real-Time WebSockets:** Instantly broadcasts state changes (new media, updated playlists, scheduled syncs) to all connected clients.
-- **🎛️ Full Control Panel:** A comprehensive, sleek React frontend to manage media libraries, spin up virtual windows, and dynamically edit drag-and-drop style playlists on the fly.
-- **⚡ "Global Sync" Override:** Instantly hijack all screens to play a specific media asset simultaneously, gracefully returning them to their exact logical positions in their individual playlists when finished.
-- **🖼️ Rich Media Support:** Natively handles Video URLs, static Images, and Blank placeholders.
+- ** Deterministic Synchronization:** Employs a 5-hour logical epoch to mathematically calculate the exact frame every window should be displaying based purely on synchronized server time. 
+- ** Real-Time WebSockets:** Instantly broadcasts state changes (new media, updated playlists, scheduled syncs) to all connected clients.
+- ** Full Control Panel:** A comprehensive, sleek React frontend to manage media libraries, spin up virtual windows, and dynamically edit drag-and-drop style playlists on the fly.
+- ** "Global Sync" Override:** Instantly hijack all screens to play a specific media asset simultaneously, gracefully returning them to their exact logical positions in their individual playlists when finished.
+- ** Rich Media Support:** Natively handles Video URLs, static Images, and Blank placeholders.
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 The platform follows a modern separated architecture:
 
@@ -44,7 +44,7 @@ The platform follows a modern separated architecture:
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 Follow these instructions to run the project locally.
 
@@ -82,7 +82,7 @@ Navigate to **[http://localhost:5173](http://localhost:5173)** in your browser t
 
 ---
 
-## 🧠 How the Engine Works
+##  How the Engine Works
 
 Instead of the server frantically pushing "play next" events to clients every few seconds (which leads to drift and lag), we use **Math**.
 
@@ -122,5 +122,5 @@ This application is production-ready and can be deployed easily:
 ---
 
 <div align="center">
-  <i>Built with ❤️ for perfectly synchronized pixels.</i>
+  <i>Built with  for perfectly synchronized pixels.</i>
 </div>
