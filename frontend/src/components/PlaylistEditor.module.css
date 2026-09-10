@@ -1,0 +1,157 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: #1a1a24;
+  border-top: 1px solid #3d3d5c;
+  margin-top: 16px;
+  border-radius: 8px;
+}
+
+.editor h4 {
+  margin: 0;
+  color: #fff;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #111;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background-color: #222;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.itemPosition {
+  color: #888;
+  font-weight: bold;
+  width: 20px;
+}
+
+.itemName {
+  flex: 1;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemDuration {
+  color: #00ff88;
+  font-size: 0.8rem;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #ff3366;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 4px;
+}
+
+.removeBtn:hover {
+  color: #ff6688;
+}
+
+.empty {
+  color: #888;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 8px;
+}
+
+.addSection {
+  display: flex;
+  gap: 8px;
+}
+
+.select {
+  flex: 1;
+  padding: 8px;
+  background-color: #111;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.durationInput {
+  width: 60px;
+  padding: 8px;
+  background-color: #111;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.addBtn {
+  padding: 8px 12px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.addBtn:hover:not(:disabled) {
+  background-color: #444;
+}
+
+.addBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.cancelBtn {
+  padding: 8px 16px;
+  background: none;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background-color: #222;
+}
+
+.saveBtn {
+  padding: 8px 16px;
+  background-color: #00ff88;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background-color: #00cc6a;
+}
+
+.saveBtn:disabled {
+  background-color: #333;
+  color: #666;
+}
