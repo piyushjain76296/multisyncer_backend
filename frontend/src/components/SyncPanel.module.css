@@ -18,6 +18,7 @@
   display: flex;
   gap: 20px;
   align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 .field {

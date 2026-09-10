@@ -22,13 +22,13 @@ export const PlaylistEditor: React.FC<Props> = ({ windowId, initialPlaylist, med
     if (!media) return;
 
     const newItem: PlaylistItem = {
-      id: Math.random().toString(), // Temp ID
+      id: crypto.randomUUID(), // Valid UUID for backend parsing
       window_id: windowId,
       media_id: media.id,
-      position: items.length,
+      position: (items || []).length,
       duration_seconds: parseInt(duration, 10),
-      created_at: '',
-      updated_at: '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       media: media
     };
     
@@ -44,7 +44,7 @@ export const PlaylistEditor: React.FC<Props> = ({ windowId, initialPlaylist, med
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const toSave = items.map((item, idx) => ({ ...item, position: idx }));
+      const toSave = (items || []).map((item, idx) => ({ ...item, position: idx }));
       await api.updatePlaylist(windowId, toSave);
       onClose();
     } catch (err) {
@@ -60,7 +60,7 @@ export const PlaylistEditor: React.FC<Props> = ({ windowId, initialPlaylist, med
       <h4>Edit Playlist</h4>
       
       <div className={styles.itemList}>
-        {items.map((item, idx) => (
+        {(items || []).map((item, idx) => (
           <div key={idx} className={styles.item}>
             <span className={styles.itemPosition}>{idx + 1}</span>
             <span className={styles.itemName}>{item.media?.name || item.media_id}</span>
@@ -74,7 +74,7 @@ export const PlaylistEditor: React.FC<Props> = ({ windowId, initialPlaylist, med
       <div className={styles.addSection}>
         <select value={selectedMediaId} onChange={e => setSelectedMediaId(e.target.value)} className={styles.select}>
           <option value="">-- Select Media --</option>
-          {mediaLibrary.map(m => (
+          {(mediaLibrary || []).map(m => (
             <option key={m.id} value={m.id}>{m.name} ({m.type})</option>
           ))}
         </select>
